@@ -1,0 +1,95 @@
+/* Variablen */
+/* Mixins */
+/* Base */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  color: #111827;
+  background: #f8fafc;
+}
+/* Header-Komponente (BEM-Konvention) */
+.header {
+  padding: 16px;
+  background: rgba(79, 70, 229, 0.08);
+  border-bottom: 1px solid rgba(79, 70, 229, 0.2);
+}
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.header__logo {
+  font-weight: 700;
+  color: #4f46e5;
+}
+.header__cta {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  background: #4f46e5;
+  border: 2px solid #3127e1;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.header__cta:hover {
+  background: #645ce8;
+}
+.header__cta:active {
+  transform: translateY(1px);
+}
+.header__cta--alt {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #fff;
+  background: #14b8a6;
+  border: 2px solid #119889;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.header__cta--alt:hover {
+  background: #17cfbb;
+}
+.header__cta--alt:active {
+  transform: translateY(1px);
+}
+/* Card-Komponente */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.card__title {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+}
+.card__actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+/* Utilities */
+.mt-1 {
+  margin-top: 8px;
+}
+.mt-2 {
+  margin-top: 16px;
+}
+.mt-3 {
+  margin-top: 24px;
+}
+/* Responsive */
+@media (min-width: 768px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
