@@ -11,12 +11,13 @@
     "dev": "nodemon --watch client/src --watch server/src -e js,less,html --exec \"npm run start\""
   },
   "dependencies": {
-    "express": "^4.21.0"
+    "express": "^4.21.0",
+    "qrcode-generator": "^2.0.4"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
+    "esbuild": "0.25.0",
     "less": "^4.2.0",
-    "semistandard": "^17.0.0",
-    "nodemon": "^3.1.5"
+    "nodemon": "^3.1.5",
+    "semistandard": "^17.0.0"
   }
 }
