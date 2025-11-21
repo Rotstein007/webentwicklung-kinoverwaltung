@@ -26,7 +26,7 @@ Single-Page-Webanwendung für die Verwaltung eines Kinos (Betreiber- und Kundens
 
 ---
 
-## ⬇️ Projekt herunterladen
+## Projekt herunterladen
 
 ### Variante 1: Git Clone (empfohlen)
 
