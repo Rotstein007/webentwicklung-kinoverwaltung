@@ -7,7 +7,8 @@
     "lint": "sh scripts/build.sh lint",
     "debug": "sh scripts/build.sh debug",
     "build": "sh scripts/build.sh build",
-    "start": "sh scripts/build.sh start"
+    "start": "sh scripts/build.sh start",
+    "dev": "nodemon --watch client/src --watch server/src -e js,less,html --exec \"npm run start\""
   },
   "dependencies": {
     "express": "^4.21.0"
@@ -15,6 +16,7 @@
   "devDependencies": {
     "esbuild": "^0.24.0",
     "less": "^4.2.0",
-    "semistandard": "^17.0.0"
+    "semistandard": "^17.0.0",
+    "nodemon": "^3.1.5"
   }
 }

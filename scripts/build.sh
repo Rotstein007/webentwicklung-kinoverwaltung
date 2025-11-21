@@ -1,11 +1,11 @@
 #!/bin/sh
-# Einfaches Build-Skript für dein Projekt
+# Build-Skript
 
-set -e  # bei Fehler in einem Befehl sofort abbrechen
+set -e  # bei Fehler abbrechen
 
 CMD="$1"
 
-# Projektroot relativ zu diesem Skript bestimmen
+# Projektroot bestimmen
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
 CLIENT_SRC="$ROOT_DIR/client/src"
@@ -19,13 +19,12 @@ case "$CMD" in
 
   lint)
     echo ">> lint"
-    # alle JS-Dateien im client/src/js und server/src prüfen
     npx semistandard "$CLIENT_SRC/js/"*.js "$ROOT_DIR/server/src/"*.js
     ;;
 
   debug)
-    echo ">> debug (ohne starke Minify)"
-    # erst lint, bei Fehler bricht set -e das Skript ab
+    echo ">> debug"
+    # Lint
     npx semistandard "$CLIENT_SRC/js/"*.js "$ROOT_DIR/server/src/"*.js
 
     mkdir -p "$CLIENT_DIST"
@@ -33,7 +32,7 @@ case "$CMD" in
     echo "   - Less -> CSS"
     npx lessc "$CLIENT_SRC/styles/main.less" "$CLIENT_DIST/main.css"
 
-    echo "   - JS -> Bundle (esbuild, ohne Minify)"
+    echo "   - JS -> Bundle"
     npx esbuild "$CLIENT_SRC/js/main.js" \
       --bundle \
       --outfile="$CLIENT_DIST/main.js"
@@ -43,8 +42,8 @@ case "$CMD" in
     ;;
 
   build)
-    echo ">> build (mit JS-Minify)"
-    # erst lint
+    echo ">> build (minified)"
+    # Lint
     npx semistandard "$CLIENT_SRC/js/"*.js "$ROOT_DIR/server/src/"*.js
 
     mkdir -p "$CLIENT_DIST"
@@ -63,7 +62,8 @@ case "$CMD" in
     ;;
 
   start)
-    echo ">> start (Server auf Port 8080)"
+    echo ">> start (debug + server)"
+    sh "$ROOT_DIR/scripts/build.sh" debug
     node "$ROOT_DIR/server/src/server.js" 8080
     ;;
 
