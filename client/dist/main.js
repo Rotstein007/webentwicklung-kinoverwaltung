@@ -1633,7 +1633,7 @@
   var qrcode_default = qrcode;
   var stringToBytes = qrcode.stringToBytes;
 
-  // client/src/js/ticket.js
+  // client/src/js/ticketView.js
   function renderTicketView(app, state2, navigateTo2) {
     const { ticket } = state2;
     if (!ticket) {
@@ -1671,6 +1671,148 @@
     }
   }
 
+  // client/src/js/homeView.js
+  function renderHomeView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Willkommen zur Kinoverwaltung</h2>
+      <p>Seiten:</p>
+      <div class="home-buttons">
+        <h3>Kunde</h3>
+        <button type="button" id="go-customer-home">Kunden-Startseite</button>
+        <button type="button" id="go-customer-reservation">Reservierungsseite</button>
+        <button type="button" id="go-ticket">Ticketseite</button>
+
+        <h3>Betreiber</h3>
+        <button type="button" id="go-operator-home">Betreiber-Startseite</button>
+        <button type="button" id="go-operator-halls">Kinosaalverwaltung</button>
+        <button type="button" id="go-operator-shows">Vorstellungen</button>
+
+        <h3>Sonstiges</h3>
+        <button type="button" id="go-404">404-Seite testen</button>
+      </div>
+    </section>
+  `;
+    const btnCustomerHome = document.getElementById("go-customer-home");
+    if (btnCustomerHome) {
+      btnCustomerHome.addEventListener("click", () => navigateTo2("customerHome"));
+    }
+    const btnCustomerReservation = document.getElementById("go-customer-reservation");
+    if (btnCustomerReservation) {
+      btnCustomerReservation.addEventListener("click", () => navigateTo2("customerReservation"));
+    }
+    const btnTicket = document.getElementById("go-ticket");
+    if (btnTicket) {
+      btnTicket.addEventListener("click", () => navigateTo2("ticket"));
+    }
+    const btnOperatorHome = document.getElementById("go-operator-home");
+    if (btnOperatorHome) {
+      btnOperatorHome.addEventListener("click", () => navigateTo2("operatorHome"));
+    }
+    const btnOperatorHalls = document.getElementById("go-operator-halls");
+    if (btnOperatorHalls) {
+      btnOperatorHalls.addEventListener("click", () => navigateTo2("operatorHalls"));
+    }
+    const btnOperatorShows = document.getElementById("go-operator-shows");
+    if (btnOperatorShows) {
+      btnOperatorShows.addEventListener("click", () => navigateTo2("operatorShows"));
+    }
+    const btn404 = document.getElementById("go-404");
+    if (btn404) {
+      btn404.addEventListener("click", () => navigateTo2("doesNotExist"));
+    }
+  }
+
+  // client/src/js/customerHomeView.js
+  function renderCustomerHomeView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Startseite</h2>
+      <p>Kunden-Home.</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
+  // client/src/js/customerReservationView.js
+  function renderCustomerReservationView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Reservierungen</h2>
+      <p>Reservierungsseite f\xFCr Kunden.</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
+  // client/src/js/operatorHomeView.js
+  function renderOperatorHomeView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Betreiber Bereich</h2>
+      <p>Betreiber Bereich</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
+  // client/src/js/operatorHallsView.js
+  function renderOperatorHallsView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Kinosaalverwaltung</h2>
+      <p>Verwaltung der Kinos\xE4le.</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
+  // client/src/js/operatorShowsView.js
+  function renderOperatorShowsView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Vorstellungen</h2>
+      <p>\xDCbersicht und Verwaltung von Vorstellungen.</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
+  // client/src/js/notFoundView.js
+  function renderNotFoundView(app, navigateTo2) {
+    app.innerHTML = `
+    <section>
+      <h2>Seite nicht gefunden</h2>
+      <p>Die angeforderte Seite existiert nicht.</p>
+      <button type="button" id="back-home">Zur\xFCck zur Auswahl</button>
+    </section>
+  `;
+    const backBtn = document.getElementById("back-home");
+    if (backBtn) {
+      backBtn.addEventListener("click", () => navigateTo2("home"));
+    }
+  }
+
   // client/src/js/main.js
   var state = {
     currentPage: "home",
@@ -1685,31 +1827,6 @@
     state.currentPage = page;
     render();
   }
-  function renderHomeView(app) {
-    app.innerHTML = `
-    <section>
-      <h2>Willkommen zur Kinoverwaltung</h2>
-      <p>Hier kommt sp\xE4ter die Rollenwahl (Betreiber / Kunde).</p>
-      <button id="go-ticket">Ticket ansehen</button>
-    </section>
-  `;
-    const ticketButton = document.getElementById("go-ticket");
-    if (ticketButton) {
-      ticketButton.addEventListener("click", () => navigateTo("ticket"));
-    }
-  }
-  function renderFallbackView(app) {
-    app.innerHTML = `
-        <section>
-          <h2>Seite nicht gefunden</h2>
-          <button id="back-home">Zur\xFCck zur Startseite</button>
-        </section>
-      `;
-    const backBtn = document.getElementById("back-home");
-    if (backBtn) {
-      backBtn.addEventListener("click", () => navigateTo("home"));
-    }
-  }
   function render() {
     updateTitle(state);
     const app = document.getElementById("app");
@@ -1719,13 +1836,28 @@
     }
     switch (state.currentPage) {
       case "home":
-        renderHomeView(app);
+        renderHomeView(app, navigateTo);
+        break;
+      case "customerHome":
+        renderCustomerHomeView(app, navigateTo);
+        break;
+      case "customerReservation":
+        renderCustomerReservationView(app, navigateTo);
+        break;
+      case "operatorHome":
+        renderOperatorHomeView(app, navigateTo);
+        break;
+      case "operatorHalls":
+        renderOperatorHallsView(app, navigateTo);
+        break;
+      case "operatorShows":
+        renderOperatorShowsView(app, navigateTo);
         break;
       case "ticket":
         renderTicketView(app, state, navigateTo);
         break;
       default:
-        renderFallbackView(app);
+        renderNotFoundView(app, navigateTo);
         break;
     }
   }
@@ -1733,7 +1865,22 @@
     let title = "Kinoverwaltung";
     switch (state2.currentPage) {
       case "home":
+        title = "Auswahl";
+        break;
+      case "customerHome":
         title = "Startseite";
+        break;
+      case "customerReservation":
+        title = "Reservierungen";
+        break;
+      case "operatorHome":
+        title = "Startseite";
+        break;
+      case "operatorHalls":
+        title = "Kinosaal verwaltung";
+        break;
+      case "operatorShows":
+        title = "Vorstellungen";
         break;
       case "ticket":
         title = "Ticket";

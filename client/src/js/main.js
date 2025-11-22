@@ -1,7 +1,14 @@
 // client/src/js/main.js
-import { renderTicketView } from './ticket.js';
+import { renderTicketView } from './ticketView.js';
+import { renderHomeView } from './homeView.js';
+import { renderCustomerHomeView } from './customerHomeView.js';
+import { renderCustomerReservationView } from './customerReservationView.js';
+import { renderOperatorHomeView } from './operatorHomeView.js';
+import { renderOperatorHallsView } from './operatorHallsView.js';
+import { renderOperatorShowsView } from './operatorShowsView.js';
+import { renderNotFoundView } from './notFoundView.js';
 
-// Globaler State (kann später aus Backend, Form, etc. kommen)
+// Test Variablen für QR code generator
 const state = {
   currentPage: 'home',
   ticket: {
@@ -17,34 +24,6 @@ function navigateTo (page) {
   render();
 }
 
-function renderHomeView (app) {
-  app.innerHTML = `
-    <section>
-      <h2>Willkommen zur Kinoverwaltung</h2>
-      <p>Hier kommt später die Rollenwahl (Betreiber / Kunde).</p>
-      <button id="go-ticket">Ticket ansehen</button>
-    </section>
-  `;
-
-  const ticketButton = document.getElementById('go-ticket');
-  if (ticketButton) {
-    ticketButton.addEventListener('click', () => navigateTo('ticket'));
-  }
-}
-
-function renderFallbackView (app) {
-  app.innerHTML = `
-        <section>
-          <h2>Seite nicht gefunden</h2>
-          <button id="back-home">Zurück zur Startseite</button>
-        </section>
-      `;
-  const backBtn = document.getElementById('back-home');
-  if (backBtn) {
-    backBtn.addEventListener('click', () => navigateTo('home'));
-  }
-}
-
 function render () {
   updateTitle(state);
 
@@ -56,7 +35,27 @@ function render () {
 
   switch (state.currentPage) {
     case 'home':
-      renderHomeView(app);
+      renderHomeView(app, navigateTo);
+      break;
+
+    case 'customerHome':
+      renderCustomerHomeView(app, navigateTo);
+      break;
+
+    case 'customerReservation':
+      renderCustomerReservationView(app, navigateTo);
+      break;
+
+    case 'operatorHome':
+      renderOperatorHomeView(app, navigateTo);
+      break;
+
+    case 'operatorHalls':
+      renderOperatorHallsView(app, navigateTo);
+      break;
+
+    case 'operatorShows':
+      renderOperatorShowsView(app, navigateTo);
       break;
 
     case 'ticket':
@@ -64,7 +63,7 @@ function render () {
       break;
 
     default:
-      renderFallbackView(app);
+      renderNotFoundView(app, navigateTo);
       break;
   }
 }
@@ -74,7 +73,27 @@ function updateTitle (state) {
 
   switch (state.currentPage) {
     case 'home':
+      title = 'Auswahl';
+      break;
+
+    case 'customerHome':
       title = 'Startseite';
+      break;
+
+    case 'customerReservation':
+      title = 'Reservierungen';
+      break;
+
+    case 'operatorHome':
+      title = 'Startseite';
+      break;
+
+    case 'operatorHalls':
+      title = 'Kinosaal verwaltung';
+      break;
+
+    case 'operatorShows':
+      title = 'Vorstellungen';
       break;
 
     case 'ticket':

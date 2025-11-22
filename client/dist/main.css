@@ -12,6 +12,14 @@ header {
   background: #2c2828;
   border-bottom: 1px solid rgba(245, 245, 245, 0.2);
 }
+footer {
+  padding: 1rem 2rem;
+  background: #2c2828;
+  border-top: 1px solid rgba(245, 245, 245, 0.2);
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(245, 245, 245, 0.6);
+}
 main {
   padding: 2rem;
 }
