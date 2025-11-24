@@ -2,67 +2,269 @@
 @bg: #3e4043;
 @fg: #f5f5f5;
 @accent: #ffcc00;
+@accent-soft: fade(@accent, 80%);
+@danger: #ff4d4d;
+@danger-soft: fade(@danger, 20%);
+@muted: #b0b0b0;
 
+// Globales Reset / Basis
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: @bg;
   color: @fg;
 }
 
-header {
-  padding: 1rem 2rem;
-  background: darken(@bg, 5%);
-  border-bottom: 1px solid fade(@fg, 20%);
-}
-
-main {
-  padding: 2rem;
-}
-
-h1,
-h2,
-h3 {
-  margin-top: 0;
-}
-
+// Links & Buttons
 a,
 button {
   font: inherit;
 }
 
-// Icon-Font (Material Symbols oder ähnliche)
-// Erwartet: dist/assets/fonts/MaterialSymbolsOutlined.ttf
+// Icon-Font (Material Symbols lokal)
 @font-face {
-  font-family: 'MaterialSymbolsOutlined';
-  src: url('./assets/fonts/MaterialSymbolsOutlined.ttf') format('truetype');
-  font-weight: 400;
+  font-family: 'Material Symbols Outlined';
+  src:
+          url('./assets/fonts/MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf') format('truetype'),
+          url('./assets/fonts/MaterialSymbolsOutlined.ttf') format('truetype');
+  font-weight: 100 700;
   font-style: normal;
+  font-display: block;
 }
 
+// Basis-Icon-Klasse
 .icon {
-  font-family: 'MaterialSymbolsOutlined';
+  font-family: 'Material Symbols Outlined';
   font-weight: 400;
   font-style: normal;
   font-size: 1.2rem;
   line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga';
+  font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+}
+
+// Layout Grundstruktur
+.app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  padding: 1rem 1.5rem;
+  background: darken(@bg, 5%);
+  border-bottom: 1px solid fade(@fg, 15%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.header-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.header-nav button {
+  border: 1px solid fade(@fg, 20%);
+  background: transparent;
+  color: @fg;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.header-nav button:hover {
+  background: fade(@fg, 8%);
+}
+
+main {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Home-View
+.home-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem 1.5rem;
+  margin-top: 1rem;
+}
+
+.home-buttons h3 {
+  margin: 0.5rem 0;
+}
+
+.home-buttons button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid fade(@fg, 18%);
+  background: fade(@fg, 5%);
+  color: @fg;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+}
+
+.home-buttons button:hover {
+  background: fade(@fg, 10%);
+}
+
+// Operator / Kunde Badges (optional)
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  border: 1px solid fade(@fg, 20%);
+}
+
+.role-badge--operator {
+  background: fade(@accent, 12%);
+  border-color: fade(@accent, 50%);
+}
+
+.role-badge--customer {
+  background: fade(@fg, 6%);
 }
 
 // Bereich Kinosaalverwaltung
-
 .hall-section {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
+.hall-section-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.hall-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hall-section-title h2 {
+  margin: 0;
+}
+
+.hall-message {
+  font-size: 0.95rem;
+  color: @muted;
+}
+
+// Grid für Kinosäle
+.hall-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.hall-card {
+  position: relative; // für den Delete-Button oben rechts
+  background: darken(@bg, 4%);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid fade(@fg, 12%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hall-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.hall-name {
+  font-weight: 600;
+}
+
+.hall-meta {
+  font-size: 0.9rem;
+  color: @muted;
+}
+
+.hall-actions {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  margin-top: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+// kleiner roter Delete-Button oben rechts
+.hall-icon-button {
+  border: none;
+  background: #c62828;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 0.4rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hall-icon-button:hover {
+  background: lighten(#c62828, 5%);
+}
+
+.hall-icon-button .icon {
+  font-size: 1.2rem;
+}
+
+// Formular zum Erstellen eines Saals
 .hall-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -80,130 +282,54 @@ button {
   }
 
   input {
-    padding: 0.4rem 0.5rem;
+    padding: 0.35rem 0.5rem;
     border-radius: 0.4rem;
-    border: 1px solid fade(@fg, 40%);
-    background: fade(@bg, 95%);
+    border: 1px solid fade(@fg, 20%);
+    background: darken(@bg, 3%);
     color: @fg;
   }
-}
 
-.halls-controls {
-  display: flex;
-  gap: 0.5rem;
-
-  button {
-    padding: 0.5rem 0.8rem;
-    border-radius: 0.6rem;
-    border: none;
-    cursor: pointer;
-  }
-
-  #add-hall {
-    font-size: 1.2rem;
-    font-weight: bold;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 999px;
-    background: @accent;
-    color: #000;
-  }
-
-  #back-home {
-    background: fade(@fg, 10%);
-    color: @fg;
-  }
-}
-
-#halls-message {
-  min-height: 1.2rem;
-  font-size: 0.9rem;
-}
-
-// Kachel-Layout für Kinosäle
-
-.halls-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 1rem;
-}
-
-.hall-card {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: 0.8rem;
-  border: 1px solid fade(@fg, 25%);
-  background: fade(@bg, 90%);
-  color: @fg;
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
-
-  .hall-name {
-    font-weight: 600;
-  }
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px fade(#000, 40%);
+  input:focus {
+    outline: 1px solid @accent;
     border-color: @accent;
   }
 }
 
-.hall-delete-button {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 999px;
+.hall-form-submit {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
   border: none;
-  background: #c0392b;
-  color: #fff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.1s ease;
+  background: @accent;
+  color: #222;
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.hall-card:hover .hall-delete-button {
-  opacity: 1;
-  pointer-events: auto;
+.hall-form-submit:hover {
+  background: lighten(@accent, 4%);
 }
 
-// Modal für Saal-Details
-
-.hall-modal {
+// Modal
+.hall-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  background: fade(#000, 60%);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
-.hall-modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: fade(#000, 70%);
-}
-
-.hall-modal-content {
-  position: relative;
-  background: fade(@bg, 98%);
-  color: @fg;
-  border-radius: 0.8rem;
-  padding: 1rem 1.25rem 1.25rem;
-  min-width: 260px;
-  max-width: 400px;
-  box-shadow: 0 10px 30px fade(#000, 60%);
-  z-index: 1;
+.hall-modal {
+  background: darken(@bg, 2%);
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
+  max-width: 420px;
+  width: 100%;
+  border: 1px solid fade(@fg, 18%);
+  box-shadow:
+          0 12px 30px fade(#000, 50%),
+          0 0 0 1px fade(#000, 35%);
 }
 
 .hall-modal-header {
@@ -211,12 +337,11 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
+}
 
-  h3 {
-    margin: 0;
-    font-size: 1.1rem;
-  }
+.hall-modal-title {
+  font-weight: 600;
 }
 
 .hall-modal-close {

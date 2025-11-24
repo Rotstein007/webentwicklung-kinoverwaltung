@@ -16,9 +16,10 @@ export async function connectToDatabase () {
   }
 
   client = new MongoClient(MONGO_URL);
-  await client.connect();
 
+  await client.connect();
   db = client.db(DB_NAME);
+
   console.log(`MongoDB verbunden (${MONGO_URL}, DB: ${DB_NAME})`);
 
   return db;
@@ -29,5 +30,6 @@ export function getDb () {
   if (!db) {
     throw new Error('Datenbankverbindung ist noch nicht initialisiert.');
   }
+
   return db;
 }
