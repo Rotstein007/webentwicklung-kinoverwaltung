@@ -39,6 +39,12 @@ case "$CMD" in
 
     echo "   - index.html kopieren"
     cp "$CLIENT_SRC/index.html" "$CLIENT_DIST/index.html"
+
+    # Assets (z.B. Fonts) nach dist kopieren
+    if [ -d "$CLIENT_SRC/assets" ]; then
+      echo "   - Assets kopieren"
+      cp -R "$CLIENT_SRC/assets" "$CLIENT_DIST/"
+    fi
     ;;
 
   build)
@@ -59,6 +65,12 @@ case "$CMD" in
 
     echo "   - index.html kopieren"
     cp "$CLIENT_SRC/index.html" "$CLIENT_DIST/index.html"
+
+    # Assets (z.B. Fonts) nach dist kopieren
+    if [ -d "$CLIENT_SRC/assets" ]; then
+      echo "   - Assets kopieren"
+      cp -R "$CLIENT_SRC/assets" "$CLIENT_DIST/"
+    fi
     ;;
 
   start)

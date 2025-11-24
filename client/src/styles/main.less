@@ -1,7 +1,5 @@
-// client/src/styles/main.less
-// Minimal-Styles, werden zu main.css kompiliert
-
-@bg: #393434;
+// Grundfarben und Typografie
+@bg: #3e4043;
 @fg: #f5f5f5;
 @accent: #ffcc00;
 
@@ -22,23 +20,219 @@ header {
   border-bottom: 1px solid fade(@fg, 20%);
 }
 
-footer {
-  padding: 1rem 2rem;
-  background: darken(@bg, 5%);
-  border-top: 1px solid fade(@fg, 20%);
-  text-align: center;
-  font-size: 0.875rem;
-  color: fade(@fg, 60%);
-}
-
 main {
   padding: 2rem;
 }
 
-h1, h2 {
+h1,
+h2,
+h3 {
   margin-top: 0;
 }
 
-a, button {
+a,
+button {
   font: inherit;
+}
+
+// Icon-Font (Material Symbols oder ähnliche)
+// Erwartet: dist/assets/fonts/MaterialSymbolsOutlined.ttf
+@font-face {
+  font-family: 'MaterialSymbolsOutlined';
+  src: url('./assets/fonts/MaterialSymbolsOutlined.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.icon {
+  font-family: 'MaterialSymbolsOutlined';
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Bereich Kinosaalverwaltung
+
+.hall-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.hall-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem 1.5rem;
+  align-items: end;
+}
+
+.hall-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  label {
+    font-size: 0.9rem;
+  }
+
+  input {
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.4rem;
+    border: 1px solid fade(@fg, 40%);
+    background: fade(@bg, 95%);
+    color: @fg;
+  }
+}
+
+.halls-controls {
+  display: flex;
+  gap: 0.5rem;
+
+  button {
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.6rem;
+    border: none;
+    cursor: pointer;
+  }
+
+  #add-hall {
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: @accent;
+    color: #000;
+  }
+
+  #back-home {
+    background: fade(@fg, 10%);
+    color: @fg;
+  }
+}
+
+#halls-message {
+  min-height: 1.2rem;
+  font-size: 0.9rem;
+}
+
+// Kachel-Layout für Kinosäle
+
+.halls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.hall-card {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.8rem;
+  border: 1px solid fade(@fg, 25%);
+  background: fade(@bg, 90%);
+  color: @fg;
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, border-color 0.1s ease;
+
+  .hall-name {
+    font-weight: 600;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px fade(#000, 40%);
+    border-color: @accent;
+  }
+}
+
+.hall-delete-button {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: none;
+  background: #c0392b;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.hall-card:hover .hall-delete-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+// Modal für Saal-Details
+
+.hall-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hall-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: fade(#000, 70%);
+}
+
+.hall-modal-content {
+  position: relative;
+  background: fade(@bg, 98%);
+  color: @fg;
+  border-radius: 0.8rem;
+  padding: 1rem 1.25rem 1.25rem;
+  min-width: 260px;
+  max-width: 400px;
+  box-shadow: 0 10px 30px fade(#000, 60%);
+  z-index: 1;
+}
+
+.hall-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+}
+
+.hall-modal-close {
+  border: none;
+  background: transparent;
+  color: @fg;
+  font-size: 1.2rem;
+  cursor: pointer;
+
+  .icon {
+    font-size: 1.3rem;
+  }
+}
+
+.hall-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
