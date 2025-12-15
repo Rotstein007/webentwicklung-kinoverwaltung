@@ -18,7 +18,9 @@
   "devDependencies": {
     "esbuild": "0.25.0",
     "less": "^4.2.0",
+    "less-plugin-clean-css": "^1.6.0",
     "nodemon": "^3.1.5",
-    "semistandard": "^17.0.0"
+    "semistandard": "^17.0.0",
+    "terser": "^5.39.0"
   }
 }

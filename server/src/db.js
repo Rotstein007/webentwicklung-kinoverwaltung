@@ -20,6 +20,18 @@ export async function connectToDatabase () {
   await client.connect();
   db = client.db(DB_NAME);
 
+  // Basis-Indizes (optional, aber hilfreich)
+  try {
+    await Promise.all([
+      db.collection('halls').createIndex({ name: 1 }, { unique: true }),
+      db.collection('shows').createIndex({ startsAt: 1 }),
+      db.collection('reservations').createIndex({ showId: 1 }),
+      db.collection('reservations').createIndex({ showId: 1, seatCodes: 1 })
+    ]);
+  } catch (err) {
+    console.warn('Indizes konnten nicht angelegt werden:', err);
+  }
+
   console.log(`MongoDB verbunden (${MONGO_URL}, DB: ${DB_NAME})`);
 
   return db;

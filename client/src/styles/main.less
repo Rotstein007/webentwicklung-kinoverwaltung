@@ -117,6 +117,161 @@ main {
   margin: 0 auto;
 }
 
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.toolbar button {
+  border: 1px solid fade(@fg, 18%);
+  background: fade(@fg, 6%);
+  color: @fg;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: fade(@fg, 10%);
+}
+
+.message {
+  min-height: 1.2rem;
+  color: @muted;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.card {
+  border: 1px solid fade(@fg, 14%);
+  background: darken(@bg, 3%);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.card-title {
+  font-weight: 650;
+  font-size: 1.05rem;
+}
+
+.card-meta {
+  color: @muted;
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem 1.25rem;
+  align-items: end;
+  margin: 1rem 0 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.form-row label {
+  font-size: 0.9rem;
+}
+
+.form-row input,
+.form-row select {
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.4rem;
+  border: 1px solid fade(@fg, 20%);
+  background: darken(@bg, 3%);
+  color: @fg;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.form-actions button {
+  border: none;
+  background: @accent;
+  color: #222;
+  font-weight: 650;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.pagination button {
+  border: 1px solid fade(@fg, 18%);
+  background: transparent;
+  color: @fg;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.resource-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.resource-item {
+  border: 1px solid fade(@fg, 14%);
+  background: darken(@bg, 3%);
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.resource-title {
+  font-weight: 650;
+}
+
+.resource-meta {
+  color: @muted;
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+}
+
+.resource-actions button {
+  border: none;
+  background: @accent;
+  color: #222;
+  font-weight: 650;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.resource-actions button:hover {
+  background: lighten(@accent, 4%);
+}
+
 // Home-View
 .home-buttons {
   display: grid;
@@ -212,6 +367,12 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
+  cursor: pointer;
+  text-align: left;
+}
+
+.hall-card:hover {
+  border-color: fade(@accent, 35%);
 }
 
 .hall-card-header {
@@ -360,4 +521,100 @@ main {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin: 0.5rem 0 0.9rem;
+  color: @muted;
+  font-size: 0.95rem;
+}
+
+.seat-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.seat-grid {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem;
+  border-radius: 0.75rem;
+  border: 1px solid fade(@fg, 14%);
+  background: darken(@bg, 3%);
+  overflow: hidden;
+}
+
+.seat {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.25rem;
+  border: 1px solid fade(@fg, 18%);
+  background: fade(@fg, 6%);
+  cursor: pointer;
+}
+
+.seat--free:hover {
+  background: fade(@fg, 10%);
+}
+
+.seat--occupied {
+  background: fade(@danger, 25%);
+  border-color: fade(@danger, 55%);
+  cursor: not-allowed;
+}
+
+.seat--selected {
+  background: fade(@accent, 28%);
+  border-color: fade(@accent, 70%);
+}
+
+.selected-seats {
+  padding: 0.4rem 0.55rem;
+  border-radius: 0.4rem;
+  border: 1px solid fade(@fg, 20%);
+  background: darken(@bg, 3%);
+  color: @fg;
+  min-height: 2.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.ticket-qr {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid fade(@fg, 14%);
+  background: #fff;
+}
+
+.ticket-qr img {
+  max-width: 260px;
+  height: auto;
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  header,
+  footer,
+  .toolbar,
+  .pagination {
+    display: none !important;
+  }
+
+  .card,
+  .resource-item,
+  .seat-grid {
+    border-color: #ddd;
+    background: #fff;
+    color: #000;
+  }
 }

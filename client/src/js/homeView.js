@@ -1,60 +1,43 @@
 // client/src/js/homeView.js
 
-export function renderHomeView (app, navigateTo) {
+export function renderHomeView (app, navigateTo, state, setRole) {
   app.innerHTML = `
     <section>
       <h2>Willkommen zur Kinoverwaltung</h2>
-      <p>Seiten:</p>
+      <p>Bitte Rolle auswählen (keine Authentifizierung).</p>
       <div class="home-buttons">
-        <h3>Kunde</h3>
-        <button type="button" id="go-customer-home">Kunden-Startseite</button>
-        <button type="button" id="go-customer-reservation">Reservierungsseite</button>
-        <button type="button" id="go-ticket">Ticketseite</button>
-
-        <h3>Betreiber</h3>
-        <button type="button" id="go-operator-home">Betreiber-Startseite</button>
-        <button type="button" id="go-operator-halls">Kinosaalverwaltung</button>
-        <button type="button" id="go-operator-shows">Vorstellungen</button>
-
-        <h3>Sonstiges</h3>
-        <button type="button" id="go-404">404-Seite testen</button>
+        <div>
+          <h3>Kunde</h3>
+          <button type="button" id="choose-customer">Als Kunde fortfahren</button>
+        </div>
+        <div>
+          <h3>Betreiber</h3>
+          <button type="button" id="choose-operator">Als Betreiber fortfahren</button>
+        </div>
       </div>
     </section>
   `;
 
-  const btnCustomerHome = document.getElementById('go-customer-home');
-  if (btnCustomerHome) {
-    btnCustomerHome.addEventListener('click', () => navigateTo('customerHome'));
+  const btnCustomer = document.getElementById('choose-customer');
+  if (btnCustomer) {
+    btnCustomer.addEventListener('click', () => setRole('customer'));
   }
 
-  const btnCustomerReservation = document.getElementById('go-customer-reservation');
-  if (btnCustomerReservation) {
-    btnCustomerReservation.addEventListener('click', () => navigateTo('customerReservation'));
+  const btnOperator = document.getElementById('choose-operator');
+  if (btnOperator) {
+    btnOperator.addEventListener('click', () => setRole('operator'));
   }
 
-  const btnTicket = document.getElementById('go-ticket');
-  if (btnTicket) {
-    btnTicket.addEventListener('click', () => navigateTo('ticket'));
-  }
-
-  const btnOperatorHome = document.getElementById('go-operator-home');
-  if (btnOperatorHome) {
-    btnOperatorHome.addEventListener('click', () => navigateTo('operatorHome'));
-  }
-
-  const btnOperatorHalls = document.getElementById('go-operator-halls');
-  if (btnOperatorHalls) {
-    btnOperatorHalls.addEventListener('click', () => navigateTo('operatorHalls'));
-  }
-
-  const btnOperatorShows = document.getElementById('go-operator-shows');
-  if (btnOperatorShows) {
-    btnOperatorShows.addEventListener('click', () => navigateTo('operatorShows'));
-  }
-
-  const btn404 = document.getElementById('go-404');
-  if (btn404) {
-    // absichtlich eine unbekannte Seite, um den Fallback zu triggern
-    btn404.addEventListener('click', () => navigateTo('doesNotExist'));
+  if (state?.role) {
+    const label = state.role === 'operator' ? 'Betreiber' : 'Kunde';
+    const continueWrapper = document.createElement('div');
+    const continueBtn = document.createElement('button');
+    continueBtn.type = 'button';
+    continueBtn.textContent = `Weiter als ${label}`;
+    continueBtn.addEventListener('click', () => {
+      navigateTo(state.role === 'operator' ? 'operatorHome' : 'customerHome');
+    });
+    continueWrapper.appendChild(continueBtn);
+    app.querySelector('.home-buttons')?.appendChild(continueWrapper);
   }
 }

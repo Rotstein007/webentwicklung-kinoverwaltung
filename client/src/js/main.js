@@ -8,23 +8,65 @@ import { renderOperatorHallsView } from './operatorHallsView.js';
 import { renderOperatorShowsView } from './operatorShowsView.js';
 import { renderNotFoundView } from './notFoundView.js';
 
-// Test Variablen für QR code generator
 const state = {
   currentPage: 'home',
-  ticket: {
-    vorname: 'Max',
-    nachname: 'Mustermann',
-    film: 'Inception',
-    sitzplatz: 'Reihe 5, Platz 8'
-  }
+  role: null,
+  params: {},
+  cleanup: null
 };
 
-function navigateTo (page) {
-  state.currentPage = page;
-  render();
+function setRole (role) {
+  state.role = role;
+  if (role === 'operator') {
+    navigateTo('operatorHome');
+    return;
+  }
+  if (role === 'customer') {
+    navigateTo('customerHome');
+    return;
+  }
+  navigateTo('home');
 }
 
-function render () {
+function navigateTo (page, params = {}) {
+  state.currentPage = page;
+  state.params = params || {};
+  render().catch(err => {
+    console.error('Render-Fehler:', err);
+  });
+}
+
+function isAllowedForRole (page) {
+  if (page === 'home' || page === 'doesNotExist') {
+    return true;
+  }
+
+  if (state.role === 'operator') {
+    return ['operatorHome', 'operatorHalls', 'operatorShows'].includes(page);
+  }
+
+  if (state.role === 'customer') {
+    return ['customerHome', 'customerReservation', 'ticket'].includes(page);
+  }
+
+  return false;
+}
+
+async function render () {
+  if (state.cleanup) {
+    try {
+      state.cleanup();
+    } catch (err) {
+      console.error('Fehler beim Cleanup:', err);
+    }
+    state.cleanup = null;
+  }
+
+  if (!isAllowedForRole(state.currentPage)) {
+    state.currentPage = 'home';
+    state.params = {};
+  }
+
   updateTitle(state);
 
   const app = document.getElementById('app');
@@ -35,31 +77,31 @@ function render () {
 
   switch (state.currentPage) {
     case 'home':
-      renderHomeView(app, navigateTo);
+      state.cleanup = renderHomeView(app, navigateTo, state, setRole) || null;
       break;
 
     case 'customerHome':
-      renderCustomerHomeView(app, navigateTo);
+      state.cleanup = (await renderCustomerHomeView(app, navigateTo, state)) || null;
       break;
 
     case 'customerReservation':
-      renderCustomerReservationView(app, navigateTo);
+      state.cleanup = (await renderCustomerReservationView(app, navigateTo, state)) || null;
       break;
 
     case 'operatorHome':
-      renderOperatorHomeView(app, navigateTo);
+      state.cleanup = renderOperatorHomeView(app, navigateTo, state, setRole) || null;
       break;
 
     case 'operatorHalls':
-      renderOperatorHallsView(app, navigateTo);
+      state.cleanup = (await renderOperatorHallsView(app, navigateTo, state)) || null;
       break;
 
     case 'operatorShows':
-      renderOperatorShowsView(app, navigateTo);
+      state.cleanup = (await renderOperatorShowsView(app, navigateTo, state)) || null;
       break;
 
     case 'ticket':
-      renderTicketView(app, state, navigateTo);
+      state.cleanup = (await renderTicketView(app, state, navigateTo)) || null;
       break;
 
     default:
@@ -110,5 +152,7 @@ function updateTitle (state) {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Client-App gestartet');
-  render();
+  render().catch(err => {
+    console.error('Render-Fehler:', err);
+  });
 });
