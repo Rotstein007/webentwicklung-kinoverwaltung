@@ -1,11 +1,15 @@
 // Grundfarben und Typografie
-@bg: #3e4043;
-@fg: #f5f5f5;
-@accent: #ffcc00;
-@accent-soft: fade(@accent, 80%);
-@danger: #ff4d4d;
-@danger-soft: fade(@danger, 20%);
-@muted: #b0b0b0;
+@bg: #0e1013;
+@panel: #171b20;
+@panel-soft: #1f242b;
+@fg: #f6f1e7;
+@accent: #6fb6ff;
+@accent-strong: #4b8fe0;
+@danger: #f05d5e;
+@danger-soft: fade(@danger, 18%);
+@muted: #c4bcae;
+@font-body: 'Google Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+@font-display: 'Google Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 
 // Globales Reset / Basis
 * {
@@ -20,15 +24,47 @@ body {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: @font-body;
   background: @bg;
   color: @fg;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+          linear-gradient(180deg, fade(#0b0c0f, 88%) 0%, fade(#0b0c0f, 45%) 45%, fade(#0b0c0f, 88%) 100%),
+          radial-gradient(circle at 20% 20%, fade(#14304d, 40%) 0%, transparent 50%),
+          radial-gradient(circle at 85% 10%, fade(#12263b, 38%) 0%, transparent 55%),
+          url('./assets/images/cinematic-kino.png');
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(120deg, fade(#0e1013, 70%), fade(#0e1013, 25%) 45%, fade(#0e1013, 75%));
+  z-index: -1;
 }
 
 // Links & Buttons
 a,
 button {
   font: inherit;
+  color: inherit;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid fade(@accent, 70%);
+  outline-offset: 2px;
 }
 
 // Icon-Font (Material Symbols lokal)
@@ -40,6 +76,24 @@ button {
   font-weight: 100 700;
   font-style: normal;
   font-display: block;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src:
+          url('./assets/fonts/google sans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Google Sans';
+  src:
+          url('./assets/fonts/google sans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf') format('truetype');
+  font-weight: 100 700;
+  font-style: italic;
+  font-display: swap;
 }
 
 // Basis-Icon-Klasse
@@ -75,19 +129,45 @@ button {
   flex-direction: column;
 }
 
-header {
-  padding: 1rem 1.5rem;
-  background: darken(@bg, 5%);
-  border-bottom: 1px solid fade(@fg, 15%);
+.site-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  padding: 1.3rem 2rem 1.1rem;
+  background:
+          linear-gradient(120deg, fade(#101317, 92%), fade(#101317, 70%)),
+          linear-gradient(90deg, fade(@accent, 20%), transparent 45%);
+  border-bottom: 1px solid fade(@fg, 12%);
+  box-shadow: 0 12px 40px fade(#000, 45%);
+  text-align: left;
+}
+
+.header-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  align-items: flex-start;
 }
 
 .header-title {
-  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  font-family: @font-display;
+  font-size: clamp(1.6rem, 1.2rem + 1vw, 2.2rem);
   font-weight: 600;
+  letter-spacing: 0.02em;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: @fg;
+  cursor: pointer;
+}
+
+.header-subtitle {
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: fade(@fg, 70%);
 }
 
 .header-nav {
@@ -97,24 +177,97 @@ header {
 }
 
 .header-nav button {
-  border: 1px solid fade(@fg, 20%);
-  background: transparent;
+  border: 1px solid fade(@fg, 25%);
+  background: fade(#000, 25%);
   color: @fg;
-  padding: 0.3rem 0.7rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 999px;
   cursor: pointer;
   font-size: 0.9rem;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
 .header-nav button:hover {
-  background: fade(@fg, 8%);
+  background: fade(@fg, 10%);
+  transform: translateY(-1px);
 }
 
-main {
+.site-main {
   flex: 1;
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.25rem, 2vw, 2.5rem);
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
+}
+
+.site-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  color: fade(@fg, 65%);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.footer-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: fade(@fg, 75%);
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: @fg;
+  text-decoration: underline;
+  text-decoration-color: fade(@accent, 60%);
+  text-underline-offset: 4px;
+}
+
+.footer-sep {
+  margin: 0 0.4rem;
+  color: fade(@fg, 35%);
+}
+
+main > section {
+  background: fade(@panel, 88%);
+  border: 1px solid fade(@fg, 12%);
+  border-radius: 1rem;
+  padding: clamp(1.25rem, 2vw, 2rem);
+  box-shadow:
+          0 18px 40px fade(#000, 35%),
+          inset 0 1px 0 fade(#fff, 6%);
+  backdrop-filter: blur(6px);
+  animation: fadeUp 420ms ease;
+}
+
+main > section + section {
+  margin-top: 1.25rem;
+}
+
+h1,
+h2,
+h3 {
+  font-family: @font-display;
+  letter-spacing: 0.01em;
+}
+
+h2 {
+  font-size: clamp(1.4rem, 1.1rem + 0.8vw, 1.9rem);
+}
+
+p {
+  color: fade(@fg, 85%);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .toolbar {
@@ -125,30 +278,34 @@ main {
 }
 
 .toolbar button {
-  border: 1px solid fade(@fg, 18%);
-  background: fade(@fg, 6%);
+  border: 1px solid fade(@fg, 20%);
+  background: fade(#000, 35%);
   color: @fg;
-  padding: 0.4rem 0.75rem;
-  border-radius: 0.5rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.65rem;
   cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .toolbar button:hover {
-  background: fade(@fg, 10%);
+  background: fade(@fg, 12%);
+  border-color: fade(@accent, 45%);
+  transform: translateY(-1px);
 }
 
 .message {
   min-height: 1.2rem;
-  color: @muted;
+  color: fade(@muted, 85%);
   margin: 0.25rem 0 0.75rem;
 }
 
 .card {
-  border: 1px solid fade(@fg, 14%);
-  background: darken(@bg, 3%);
-  border-radius: 0.75rem;
-  padding: 0.9rem 1rem;
+  border: 1px solid fade(@fg, 12%);
+  background: fade(@panel-soft, 90%);
+  border-radius: 0.9rem;
+  padding: 1rem 1.1rem;
   margin: 0.75rem 0 1rem;
+  box-shadow: 0 14px 30px fade(#000, 28%);
 }
 
 .card-title {
@@ -157,7 +314,7 @@ main {
 }
 
 .card-meta {
-  color: @muted;
+  color: fade(@muted, 85%);
   margin-top: 0.25rem;
   font-size: 0.95rem;
 }
@@ -182,10 +339,10 @@ main {
 
 .form-row input,
 .form-row select {
-  padding: 0.4rem 0.55rem;
-  border-radius: 0.4rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.55rem;
   border: 1px solid fade(@fg, 20%);
-  background: darken(@bg, 3%);
+  background: fade(#000, 28%);
   color: @fg;
 }
 
@@ -196,12 +353,13 @@ main {
 
 .form-actions button {
   border: none;
-  background: @accent;
-  color: #222;
+  background: linear-gradient(120deg, @accent, @accent-strong);
+  color: #2a2316;
   font-weight: 650;
-  padding: 0.45rem 0.9rem;
-  border-radius: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
   cursor: pointer;
+  box-shadow: 0 10px 25px fade(#000, 35%);
 }
 
 .form-actions button:disabled {
@@ -219,11 +377,17 @@ main {
 
 .pagination button {
   border: 1px solid fade(@fg, 18%);
-  background: transparent;
+  background: fade(#000, 30%);
   color: @fg;
-  padding: 0.35rem 0.7rem;
-  border-radius: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 0.65rem;
   cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  border-color: fade(@accent, 45%);
+  transform: translateY(-1px);
 }
 
 .pagination button:disabled {
@@ -238,14 +402,15 @@ main {
 }
 
 .resource-item {
-  border: 1px solid fade(@fg, 14%);
-  background: darken(@bg, 3%);
-  border-radius: 0.75rem;
-  padding: 0.75rem 0.9rem;
+  border: 1px solid fade(@fg, 12%);
+  background: fade(@panel-soft, 88%);
+  border-radius: 0.9rem;
+  padding: 0.85rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  box-shadow: 0 12px 26px fade(#000, 26%);
 }
 
 .resource-title {
@@ -253,23 +418,23 @@ main {
 }
 
 .resource-meta {
-  color: @muted;
+  color: fade(@muted, 85%);
   margin-top: 0.2rem;
   font-size: 0.95rem;
 }
 
 .resource-actions button {
   border: none;
-  background: @accent;
-  color: #222;
+  background: linear-gradient(120deg, @accent, @accent-strong);
+  color: #2a2316;
   font-weight: 650;
-  padding: 0.4rem 0.8rem;
-  border-radius: 0.5rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
   cursor: pointer;
 }
 
 .resource-actions button:hover {
-  background: lighten(@accent, 4%);
+  filter: brightness(1.05);
 }
 
 // Home-View
@@ -281,7 +446,8 @@ main {
 }
 
 .home-buttons h3 {
-  margin: 0.5rem 0;
+  margin: 0.5rem 0 0.65rem;
+  color: fade(@fg, 90%);
 }
 
 .home-buttons button {
@@ -289,17 +455,93 @@ main {
   width: 100%;
   text-align: left;
   margin-bottom: 0.25rem;
-  border-radius: 0.5rem;
+  border-radius: 0.8rem;
   border: 1px solid fade(@fg, 18%);
-  background: fade(@fg, 5%);
+  background: linear-gradient(120deg, fade(@panel-soft, 88%), fade(@panel, 80%));
   color: @fg;
-  padding: 0.4rem 0.7rem;
+  padding: 0.65rem 0.9rem;
   cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .home-buttons button:hover {
-  background: fade(@fg, 10%);
+  border-color: fade(@accent, 45%);
+  transform: translateY(-2px);
 }
+
+.role-selection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  gap: 1.25rem;
+  min-height: 55vh;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  backdrop-filter: none;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.role-card {
+  border: 1px solid fade(@fg, 18%);
+  background: linear-gradient(140deg, fade(@panel-soft, 90%), fade(@panel, 80%));
+  border-radius: 1rem;
+  padding: 1.2rem 1.3rem;
+  text-align: left;
+  color: @fg;
+  cursor: pointer;
+  box-shadow: 0 18px 36px fade(#000, 28%);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  width: 100%;
+  min-height: 260px;
+}
+
+.role-card:hover {
+  transform: translateY(-4px);
+  border-color: fade(@accent, 60%);
+  box-shadow: 0 22px 40px fade(#000, 35%);
+}
+
+.role-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.role-chip {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid fade(@fg, 25%);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: fade(@fg, 85%);
+  background: fade(#000, 30%);
+}
+
+.role-card-title {
+  font-family: @font-display;
+  font-size: 1.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.role-card-text {
+  color: fade(@muted, 90%);
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.role-card-cta {
+  font-weight: 600;
+  color: @accent;
+}
+
 
 // Operator / Kunde Badges (optional)
 .role-badge {
@@ -310,11 +552,12 @@ main {
   border-radius: 999px;
   font-size: 0.8rem;
   border: 1px solid fade(@fg, 20%);
+  background: fade(#000, 25%);
 }
 
 .role-badge--operator {
-  background: fade(@accent, 12%);
-  border-color: fade(@accent, 50%);
+  background: fade(@accent, 15%);
+  border-color: fade(@accent, 55%);
 }
 
 .role-badge--customer {
@@ -348,7 +591,7 @@ main {
 
 .hall-message {
   font-size: 0.95rem;
-  color: @muted;
+  color: fade(@muted, 85%);
 }
 
 // Grid für Kinosäle
@@ -360,19 +603,22 @@ main {
 
 .hall-card {
   position: relative; // für den Delete-Button oben rechts
-  background: darken(@bg, 4%);
-  border-radius: 0.75rem;
-  padding: 0.9rem 1rem;
+  background: fade(@panel-soft, 88%);
+  border-radius: 0.9rem;
+  padding: 1rem 1.1rem;
   border: 1px solid fade(@fg, 12%);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   cursor: pointer;
   text-align: left;
+  box-shadow: 0 12px 26px fade(#000, 24%);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .hall-card:hover {
-  border-color: fade(@accent, 35%);
+  border-color: fade(@accent, 45%);
+  transform: translateY(-2px);
 }
 
 .hall-card-header {
@@ -388,7 +634,7 @@ main {
 
 .hall-meta {
   font-size: 0.9rem;
-  color: @muted;
+  color: fade(@muted, 85%);
 }
 
 .hall-actions {
@@ -404,7 +650,7 @@ main {
 // kleiner roter Delete-Button oben rechts
 .hall-icon-button {
   border: none;
-  background: #c62828;
+  background: linear-gradient(135deg, #c62828, #a61f1f);
   color: #fff;
   font-size: 1.1rem;
   cursor: pointer;
@@ -443,10 +689,10 @@ main {
   }
 
   input {
-    padding: 0.35rem 0.5rem;
-    border-radius: 0.4rem;
+    padding: 0.45rem 0.65rem;
+    border-radius: 0.5rem;
     border: 1px solid fade(@fg, 20%);
-    background: darken(@bg, 3%);
+    background: fade(#000, 28%);
     color: @fg;
   }
 
@@ -457,17 +703,17 @@ main {
 }
 
 .hall-form-submit {
-  padding: 0.45rem 0.9rem;
-  border-radius: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
   border: none;
-  background: @accent;
-  color: #222;
+  background: linear-gradient(120deg, @accent, @accent-strong);
+  color: #2a2316;
   cursor: pointer;
   font-weight: 600;
 }
 
 .hall-form-submit:hover {
-  background: lighten(@accent, 4%);
+  filter: brightness(1.05);
 }
 
 // Modal
@@ -482,9 +728,9 @@ main {
 }
 
 .hall-modal {
-  background: darken(@bg, 2%);
-  border-radius: 0.75rem;
-  padding: 1rem 1.2rem;
+  background: fade(@panel, 95%);
+  border-radius: 0.9rem;
+  padding: 1.1rem 1.3rem;
   max-width: 420px;
   width: 100%;
   border: 1px solid fade(@fg, 18%);
@@ -528,7 +774,7 @@ main {
   flex-wrap: wrap;
   gap: 0.75rem 1.25rem;
   margin: 0.5rem 0 0.9rem;
-  color: @muted;
+  color: fade(@muted, 85%);
   font-size: 0.95rem;
 }
 
@@ -541,23 +787,25 @@ main {
 .seat-grid {
   display: grid;
   gap: 0.35rem;
-  padding: 0.9rem;
-  border-radius: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.9rem;
   border: 1px solid fade(@fg, 14%);
-  background: darken(@bg, 3%);
+  background: fade(@panel-soft, 88%);
   overflow: hidden;
 }
 
 .seat {
   aspect-ratio: 1 / 1;
-  border-radius: 0.25rem;
+  border-radius: 0.35rem;
   border: 1px solid fade(@fg, 18%);
-  background: fade(@fg, 6%);
+  background: fade(@fg, 8%);
   cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
 
 .seat--free:hover {
-  background: fade(@fg, 10%);
+  background: fade(@fg, 16%);
+  transform: translateY(-1px);
 }
 
 .seat--occupied {
@@ -567,15 +815,15 @@ main {
 }
 
 .seat--selected {
-  background: fade(@accent, 28%);
+  background: fade(@accent, 35%);
   border-color: fade(@accent, 70%);
 }
 
 .selected-seats {
-  padding: 0.4rem 0.55rem;
-  border-radius: 0.4rem;
+  padding: 0.45rem 0.6rem;
+  border-radius: 0.5rem;
   border: 1px solid fade(@fg, 20%);
-  background: darken(@bg, 3%);
+  background: fade(@panel-soft, 88%);
   color: @fg;
   min-height: 2.1rem;
   display: flex;
@@ -590,6 +838,7 @@ main {
   border-radius: 0.75rem;
   border: 1px solid fade(@fg, 14%);
   background: #fff;
+  box-shadow: 0 12px 24px fade(#000, 25%);
 }
 
 .ticket-qr img {

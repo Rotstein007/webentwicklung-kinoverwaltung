@@ -152,6 +152,12 @@ function updateTitle (state) {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Client-App gestartet');
+  const homeLink = document.getElementById('home-link');
+  if (homeLink) {
+    homeLink.addEventListener('click', () => {
+      setRole(null);
+    });
+  }
   render().catch(err => {
     console.error('Render-Fehler:', err);
   });

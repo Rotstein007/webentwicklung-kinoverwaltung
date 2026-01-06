@@ -17,7 +17,7 @@ export function createResponsivePaginator ({
   renderItem,
   getItems,
   estimateItemHeightPx = 56,
-  bottomReservePx = 180
+  bottomReservePx = 0
 }) {
   let pageIndex = 0;
   let itemHeightPx = estimateItemHeightPx;
@@ -46,7 +46,14 @@ export function createResponsivePaginator ({
 
   function computeItemsPerPage () {
     const rect = listEl.getBoundingClientRect();
-    const available = Math.max(1, Math.floor(window.innerHeight - rect.top - bottomReservePx));
+    const footer = document.querySelector('footer');
+    const footerHeight = footer ? Math.round(footer.getBoundingClientRect().height) : 0;
+    const controlsRect = controlsEl.getBoundingClientRect();
+    const controlsHeight = Math.round(controlsRect.height);
+    const controlsMarginTop = Number.parseFloat(window.getComputedStyle(controlsEl).marginTop) || 0;
+    const safetyGap = 8;
+    const reserved = bottomReservePx + footerHeight + controlsHeight + controlsMarginTop + safetyGap;
+    const available = Math.max(1, Math.floor(window.innerHeight - rect.top - reserved));
     const perPage = Math.max(1, Math.floor(available / itemHeightPx));
     return perPage;
   }

@@ -8,7 +8,7 @@
     "debug": "sh scripts/build.sh debug",
     "build": "sh scripts/build.sh build",
     "start": "sh scripts/build.sh start",
-    "dev": "nodemon --watch client/src --watch server/src -e js,less,html --exec \"npm run start\""
+    "dev": "nodemon --watch client/src --watch server/src -e js,less,html --exec \"npm run debug && npm run start\""
   },
   "dependencies": {
     "express": "^4.21.0",
