@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^4.21.0",
+    "git": "^0.1.5",
     "mongodb": "^7.0.0",
     "qrcode-generator": "^2.0.4"
   },

@@ -31,6 +31,10 @@ body {
   min-height: 100vh;
 }
 
+html.light-mode {
+  color-scheme: light;
+}
+
 body::before {
   content: '';
   position: fixed;
@@ -132,7 +136,7 @@ select:focus-visible {
 .site-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 1.3rem 2rem 1.1rem;
   background:
           linear-gradient(120deg, fade(#101317, 92%), fade(#101317, 70%)),
@@ -140,6 +144,45 @@ select:focus-visible {
   border-bottom: 1px solid fade(@fg, 12%);
   box-shadow: 0 12px 40px fade(#000, 45%);
   text-align: left;
+}
+
+// Theme Toggle Button
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid fade(@fg, 20%);
+  border-radius: 50%;
+  background: fade(#000, 30%);
+  color: @fg;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background: fade(@fg, 10%);
+  border-color: fade(@accent, 50%);
+  transform: scale(1.05);
+}
+
+.theme-toggle-icon {
+  font-family: 'Material Symbols Outlined';
+  font-size: 1.4rem;
+}
+
+.theme-toggle-icon--light {
+  display: none;
+}
+
+// Light Mode zeigt Sun Icon
+body.light-mode .theme-toggle-icon--dark {
+  display: none;
+}
+
+body.light-mode .theme-toggle-icon--light {
+  display: block;
 }
 
 .header-brand {
@@ -151,7 +194,8 @@ select:focus-visible {
 
 .header-title {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.4rem;
   font-family: @font-display;
   font-size: clamp(1.6rem, 1.2rem + 1vw, 2.2rem);
   font-weight: 600;
@@ -161,6 +205,13 @@ select:focus-visible {
   padding: 0;
   color: @fg;
   cursor: pointer;
+}
+
+.header-location {
+  font-size: 0.55em;
+  font-weight: 400;
+  color: fade(@fg, 70%);
+  letter-spacing: 0.08em;
 }
 
 .header-subtitle {
@@ -229,14 +280,13 @@ select:focus-visible {
 }
 
 main > section {
-  background: fade(@panel, 88%);
+  background: fade(@panel, 94%);
   border: 1px solid fade(@fg, 12%);
   border-radius: 1rem;
   padding: clamp(1.25rem, 2vw, 2rem);
   box-shadow:
           0 18px 40px fade(#000, 35%),
           inset 0 1px 0 fade(#fff, 6%);
-  backdrop-filter: blur(6px);
   animation: fadeUp 420ms ease;
 }
 
@@ -278,18 +328,19 @@ p {
 }
 
 .toolbar button {
-  border: 1px solid fade(@fg, 20%);
-  background: fade(#000, 35%);
-  color: @fg;
+  border: 1px solid fade(@accent, 40%);
+  background: fade(@accent, 10%);
+  color: @accent;
   padding: 0.45rem 0.9rem;
-  border-radius: 0.65rem;
+  border-radius: 999px;
   cursor: pointer;
+  font-weight: 500;
   transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .toolbar button:hover {
-  background: fade(@fg, 12%);
-  border-color: fade(@accent, 45%);
+  background: fade(@accent, 20%);
+  border-color: fade(@accent, 60%);
   transform: translateY(-1px);
 }
 
@@ -297,6 +348,11 @@ p {
   min-height: 1.2rem;
   color: fade(@muted, 85%);
   margin: 0.25rem 0 0.75rem;
+}
+
+.message--success {
+  color: #4ade80;
+  font-weight: 500;
 }
 
 .card {
@@ -341,8 +397,29 @@ p {
 .form-row select {
   padding: 0.5rem 0.65rem;
   border-radius: 0.55rem;
-  border: 1px solid fade(@fg, 20%);
-  background: fade(#000, 28%);
+  border: 1px solid fade(@accent, 30%);
+  background: fade(#0a0c10, 80%);
+  color: @fg;
+}
+
+.form-row input:focus,
+.form-row select:focus {
+  outline: none;
+  border-color: @accent;
+  box-shadow: 0 0 0 2px fade(@accent, 15%);
+}
+
+.form-row select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236fb6ff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  padding-right: 2rem;
+}
+
+.form-row select option {
+  background: #1a1d24;
   color: @fg;
 }
 
@@ -367,7 +444,8 @@ p {
   cursor: not-allowed;
 }
 
-.pagination {
+.pagination,
+.pagination-controls {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,24 +453,121 @@ p {
   margin-top: 1rem;
 }
 
-.pagination button {
-  border: 1px solid fade(@fg, 18%);
-  background: fade(#000, 30%);
-  color: @fg;
-  padding: 0.35rem 0.9rem;
-  border-radius: 0.65rem;
-  cursor: pointer;
-  transition: border-color 0.2s ease, transform 0.2s ease;
+.pagination-controls {
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.pagination button:hover:not(:disabled) {
-  border-color: fade(@accent, 45%);
+@media (max-width: 500px) {
+  .pagination-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .pagination-options {
+    align-self: flex-end;
+    font-size: 0.8rem;
+  }
+}
+
+.pagination-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pagination-options {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: fade(@muted, 85%);
+  margin-left: auto;
+}
+
+.pagination button,
+.pagination-nav button {
+  border: 1px solid fade(@accent, 40%);
+  background: fade(@accent, 10%);
+  color: @accent;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.pagination button:hover:not(:disabled),
+.pagination-nav button:hover:not(:disabled) {
+  background: fade(@accent, 20%);
+  border-color: fade(@accent, 60%);
   transform: translateY(-1px);
 }
 
-.pagination button:disabled {
-  opacity: 0.6;
+.pagination button:disabled,
+.pagination-nav button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+// Load More Controls
+.load-more-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.load-more-btn {
+  border: 1px solid fade(@accent, 50%);
+  background: fade(@accent, 12%);
+  color: @accent;
+  padding: 0.55rem 1.5rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.load-more-btn:hover {
+  background: fade(@accent, 22%);
+  transform: translateY(-1px);
+}
+
+.load-more-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: fade(@muted, 85%);
+}
+
+.items-select {
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid fade(@accent, 30%);
+  background: fade(#0a0c10, 80%);
+  color: @fg;
+  font-size: 0.85rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236fb6ff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 1.8rem;
+}
+
+.items-select:focus {
+  outline: none;
+  border-color: @accent;
+  box-shadow: 0 0 0 2px fade(@accent, 15%);
+}
+
+.items-select option {
+  background: #1a1d24;
+  color: @fg;
 }
 
 .resource-list {
@@ -576,18 +751,97 @@ p {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem 0.75rem;
+}
+
+.hall-section-header > button {
+  border: 1px solid fade(@accent, 40%);
+  background: fade(@accent, 10%);
+  color: @accent;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.hall-section-header > button:hover {
+  background: fade(@accent, 20%);
+  border-color: fade(@accent, 60%);
+  transform: translateY(-1px);
 }
 
 .hall-section-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
 }
 
 .hall-section-title h2 {
   margin: 0;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
 }
+
+// Responsive: Badge unter Titel auf kleinen Screens
+@media (max-width: 500px) {
+  .hall-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hall-section-header > button {
+    align-self: flex-start;
+    order: -1;
+    margin-bottom: 0.25rem;
+  }
+
+  .role-badge {
+    font-size: 0.7rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  // Alle Sections als Flex-Container
+  main > section {
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Buttons über Überschriften
+  main > section > .toolbar {
+    order: -2;
+    margin: 0 0 0.25rem;
+  }
+
+  // Einzelne Buttons direkt in Section (z.B. Zurück ohne Toolbar)
+  main > section > button {
+    order: -2;
+    align-self: flex-start;
+    margin-bottom: 0.25rem;
+  }
+
+  main > section > h2 {
+    order: -1;
+    margin-bottom: 0.5rem;
+  }
+
+  main > section > p {
+    order: 0;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  // Home-Buttons (Navigationsmenü) bleiben unter der Beschreibung
+  main > section > .home-buttons {
+    order: 1;
+    margin-top: 0;
+  }
+
+  main > section > .pagination-controls {
+    order: 99;
+  }
+}
+
 
 .hall-message {
   font-size: 0.95rem;
@@ -621,10 +875,41 @@ p {
   transform: translateY(-2px);
 }
 
+.hall-card--new {
+  border-color: #4ade80;
+  animation: hallPulse 0.6s ease;
+  box-shadow: 0 12px 26px fade(#000, 24%), 0 0 20px fade(#4ade80, 25%);
+}
+
+@keyframes hallPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.hall-new-badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: #4ade80;
+  color: #0e1013;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .hall-card-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 0.5rem;
 }
 
@@ -691,15 +976,79 @@ p {
   input {
     padding: 0.45rem 0.65rem;
     border-radius: 0.5rem;
-    border: 1px solid fade(@fg, 20%);
-    background: fade(#000, 28%);
+    border: 1px solid fade(@accent, 30%);
+    background: fade(#0a0c10, 80%);
     color: @fg;
   }
 
   input:focus {
-    outline: 1px solid @accent;
+    outline: none;
     border-color: @accent;
+    box-shadow: 0 0 0 2px fade(@accent, 15%);
   }
+
+  // Number input spinner styling
+  input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+}
+
+// Custom number input with buttons
+.hall-form-row .number-input-wrapper {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.hall-form-row .number-input-wrapper input {
+  border-radius: 0;
+  text-align: center;
+  width: 60px;
+  border-left: none;
+  border-right: none;
+}
+
+.hall-form-row .number-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  border: 1px solid fade(@accent, 30%);
+  background: fade(@accent, 10%);
+  color: @accent;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.hall-form-row .number-btn:hover {
+  background: fade(@accent, 20%);
+}
+
+.hall-form-row .number-btn--minus {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.hall-form-row .number-btn--plus {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.hall-preview {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.55rem;
+  border: 1px solid fade(@accent, 40%);
+  background: fade(@accent, 12%);
+  color: @accent;
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .hall-form-submit {
@@ -792,6 +1141,7 @@ p {
   border: 1px solid fade(@fg, 14%);
   background: fade(@panel-soft, 88%);
   overflow: hidden;
+  contain: layout style;
 }
 
 .seat {
@@ -800,12 +1150,10 @@ p {
   border: 1px solid fade(@fg, 18%);
   background: fade(@fg, 8%);
   cursor: pointer;
-  transition: transform 0.15s ease, background 0.2s ease;
 }
 
 .seat--free:hover {
   background: fade(@fg, 16%);
-  transform: translateY(-1px);
 }
 
 .seat--occupied {
@@ -865,5 +1213,386 @@ p {
     border-color: #ddd;
     background: #fff;
     color: #000;
+  }
+}
+
+// ==========================================
+// LIGHT MODE
+// ==========================================
+@light-bg: #f5f5f7;
+@light-panel: #ffffff;
+@light-panel-soft: #f0f0f2;
+@light-fg: #1d1d1f;
+@light-muted: #6e6e73;
+@light-accent: #0071e3;
+@light-accent-strong: #0058b0;
+
+body.light-mode {
+  background: @light-bg;
+  color: @light-fg;
+  color-scheme: light;
+
+  input,
+  select,
+  textarea {
+    color-scheme: light;
+  }
+
+  &::before {
+    background:
+      linear-gradient(180deg, fade(@light-bg, 70%) 0%, fade(@light-bg, 40%) 45%, fade(@light-bg, 70%) 100%),
+      url('./assets/images/cinematic-kino.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+  }
+
+  &::after {
+    background: linear-gradient(120deg, fade(@light-bg, 50%), fade(@light-bg, 20%) 45%, fade(@light-bg, 50%));
+  }
+
+  .site-header {
+    background:
+      linear-gradient(120deg, fade(#fff, 95%), fade(#fff, 85%)),
+      linear-gradient(90deg, fade(@light-accent, 10%), transparent 45%);
+    border-bottom-color: fade(@light-fg, 10%);
+    box-shadow: 0 4px 20px fade(#000, 8%);
+  }
+
+  .header-title {
+    color: @light-fg;
+  }
+
+  .header-location {
+    color: fade(@light-fg, 60%);
+  }
+
+  .header-subtitle {
+    color: fade(@light-fg, 65%);
+  }
+
+  .header-nav button {
+    border-color: fade(@light-fg, 18%);
+    background: fade(@light-fg, 6%);
+    color: @light-fg;
+
+    &:hover {
+      background: fade(@light-fg, 12%);
+      border-color: fade(@light-accent, 35%);
+    }
+  }
+
+  .theme-toggle {
+    border-color: fade(@light-fg, 15%);
+    background: fade(@light-fg, 5%);
+    color: @light-fg;
+
+    &:hover {
+      background: fade(@light-fg, 10%);
+      border-color: @light-accent;
+    }
+  }
+
+  .site-footer {
+    color: fade(@light-fg, 60%);
+  }
+
+  .footer-link {
+    color: fade(@light-fg, 70%);
+
+    &:hover {
+      color: @light-fg;
+    }
+  }
+
+  .footer-sep {
+    color: fade(@light-fg, 40%);
+  }
+
+  main > section {
+    background: fade(@light-panel, 95%);
+    border-color: fade(@light-fg, 8%);
+    box-shadow: 0 8px 30px fade(#000, 8%), inset 0 1px 0 fade(#fff, 80%);
+  }
+
+  .role-selection {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  h2, h3 {
+    color: @light-fg;
+  }
+
+  p {
+    color: fade(@light-fg, 75%);
+  }
+
+  .message {
+    color: fade(@light-muted, 90%);
+  }
+
+  .message--success {
+    color: #22c55e;
+  }
+
+  .card {
+    background: @light-panel-soft;
+    border-color: fade(@light-fg, 8%);
+    box-shadow: 0 4px 15px fade(#000, 6%);
+  }
+
+  .card-meta {
+    color: fade(@light-muted, 90%);
+  }
+
+  // Buttons
+  .toolbar button,
+  .hall-section-header > button,
+  .pagination button,
+  .pagination-nav button,
+  .load-more-btn {
+    border-color: fade(@light-accent, 40%);
+    background: fade(@light-accent, 8%);
+    color: @light-accent;
+
+    &:hover:not(:disabled) {
+      background: fade(@light-accent, 15%);
+      border-color: @light-accent;
+    }
+  }
+
+  .form-actions button,
+  .resource-actions button,
+  .hall-form-submit {
+    background: linear-gradient(120deg, @light-accent, @light-accent-strong);
+    color: #fff;
+  }
+
+  // Forms
+  .form-row input,
+  .form-row select,
+  .hall-form-row input,
+  .items-select {
+    border-color: fade(@light-fg, 15%);
+    background-color: @light-panel;
+    color: @light-fg;
+    color-scheme: light;
+
+    &:focus {
+      border-color: @light-accent;
+      box-shadow: 0 0 0 3px fade(@light-accent, 15%);
+    }
+  }
+
+  .form-row select,
+  .items-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%230058b0' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+  }
+
+  .form-row select {
+    background-position: right 0.6rem center;
+  }
+
+  .items-select {
+    background-position: right 0.5rem center;
+  }
+
+  .form-row select option,
+  .items-select option {
+    background: @light-panel;
+    color: @light-fg;
+  }
+
+  select {
+    background-color: @light-panel;
+    color: @light-fg;
+  }
+
+  select option {
+    background-color: @light-panel;
+    color: @light-fg;
+  }
+
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="time"] {
+    background: @light-panel;
+    color: @light-fg;
+  }
+
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: none;
+  }
+
+  .hall-preview {
+    border-color: fade(@light-accent, 40%);
+    background: fade(@light-accent, 8%);
+    color: @light-accent;
+  }
+
+  .number-btn {
+    border-color: fade(@light-accent, 30%);
+    background: fade(@light-accent, 8%);
+    color: @light-accent;
+
+    &:hover {
+      background: fade(@light-accent, 15%);
+    }
+  }
+
+  // Resource items
+  .resource-item {
+    background: @light-panel;
+    border-color: fade(@light-fg, 8%);
+    box-shadow: 0 4px 12px fade(#000, 5%);
+  }
+
+  .resource-meta {
+    color: fade(@light-muted, 90%);
+  }
+
+  // Hall cards
+  .hall-card {
+    background: @light-panel;
+    border-color: fade(@light-fg, 8%);
+    box-shadow: 0 4px 12px fade(#000, 5%);
+
+    &:hover {
+      border-color: fade(@light-accent, 50%);
+    }
+  }
+
+  .hall-card--new {
+    border-color: #22c55e;
+    box-shadow: 0 4px 12px fade(#000, 5%), 0 0 15px fade(#22c55e, 20%);
+  }
+
+  .hall-new-badge {
+    background: #22c55e;
+    color: #fff;
+  }
+
+  .hall-meta {
+    color: fade(@light-muted, 90%);
+  }
+
+  .hall-message {
+    color: fade(@light-muted, 90%);
+  }
+
+  // Role cards
+  .role-card {
+    background: linear-gradient(140deg, @light-panel, @light-panel-soft);
+    border-color: fade(@light-fg, 10%);
+    box-shadow: 0 8px 25px fade(#000, 8%);
+
+    &:hover {
+      border-color: fade(@light-accent, 50%);
+    }
+  }
+
+  .role-chip {
+    border-color: fade(@light-fg, 20%);
+    background: fade(@light-fg, 5%);
+    color: fade(@light-fg, 80%);
+  }
+
+  .role-card-title {
+    color: @light-fg;
+  }
+
+  .role-card-text {
+    color: fade(@light-muted, 95%);
+  }
+
+  .role-card-cta {
+    color: @light-accent;
+  }
+
+  .home-buttons h3 {
+    color: @light-fg;
+  }
+
+  .home-buttons button {
+    border-color: fade(@light-fg, 15%);
+    background: linear-gradient(120deg, @light-panel, @light-panel-soft);
+    color: @light-fg;
+
+    &:hover {
+      border-color: fade(@light-accent, 50%);
+    }
+  }
+
+  // Badges
+  .role-badge {
+    border-color: fade(@light-fg, 15%);
+    background: fade(@light-fg, 5%);
+  }
+
+  .role-badge--operator {
+    background: fade(@light-accent, 10%);
+    border-color: fade(@light-accent, 40%);
+  }
+
+  // Seats
+  .seat-grid {
+    background: @light-panel-soft;
+    border-color: fade(@light-fg, 10%);
+  }
+
+  .seat {
+    border-color: fade(@light-fg, 15%);
+    background: fade(@light-fg, 5%);
+
+    &--free:hover {
+      background: fade(@light-fg, 12%);
+    }
+
+    &--occupied {
+      background: fade(#ef4444, 20%);
+      border-color: fade(#ef4444, 50%);
+    }
+
+    &--selected {
+      background: fade(@light-accent, 25%);
+      border-color: fade(@light-accent, 60%);
+    }
+  }
+
+  .selected-seats {
+    background: @light-panel-soft;
+    border-color: fade(@light-fg, 28%);
+    color: @light-fg;
+  }
+
+  // Modal
+  .hall-modal-backdrop {
+    background: fade(#000, 40%);
+  }
+
+  .hall-modal {
+    background: @light-panel;
+    border-color: fade(@light-fg, 12%);
+    box-shadow: 0 20px 50px fade(#000, 15%);
+  }
+
+  .hall-modal-close {
+    color: @light-fg;
+  }
+
+  .pagination-options {
+    color: fade(@light-muted, 90%);
+  }
+
+  // QR Code
+  .ticket-qr {
+    border-color: fade(@light-fg, 10%);
+    box-shadow: 0 4px 15px fade(#000, 8%);
   }
 }

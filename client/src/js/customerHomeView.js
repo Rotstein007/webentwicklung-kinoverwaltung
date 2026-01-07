@@ -32,10 +32,22 @@ export async function renderCustomerHomeView (app, navigateTo, state) {
 
       <div id="shows-list" class="resource-list" aria-label="Vorstellungen"></div>
 
-      <div class="pagination" id="shows-pagination">
-        <button type="button" data-pagination="prev">Zurück</button>
-        <span data-pagination="label"></span>
-        <button type="button" data-pagination="next">Weiter</button>
+      <div class="pagination-controls" id="shows-pagination">
+        <div class="pagination-nav">
+          <button type="button" data-pagination="prev">Zurück</button>
+          <span data-pagination="label"></span>
+          <button type="button" data-pagination="next">Weiter</button>
+        </div>
+        <div class="pagination-options">
+          <label for="items-per-page-customer">Anzeigen:</label>
+          <select id="items-per-page-customer" class="items-select">
+            <option value="auto">Auto</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
       </div>
     </section>
   `;
@@ -43,6 +55,7 @@ export async function renderCustomerHomeView (app, navigateTo, state) {
   const listEl = document.getElementById('shows-list');
   const messageEl = document.getElementById('shows-message');
   const controlsEl = document.getElementById('shows-pagination');
+  const itemsPerPageSelect = document.getElementById('items-per-page-customer');
 
   const switchRoleBtn = document.getElementById('switch-role');
   if (switchRoleBtn) {
@@ -52,8 +65,16 @@ export async function renderCustomerHomeView (app, navigateTo, state) {
     });
   }
 
-  if (!listEl || !controlsEl || !messageEl) {
+  if (!listEl || !controlsEl || !messageEl || !itemsPerPageSelect) {
     return null;
+  }
+
+  function getFixedItemsPerPage () {
+    const value = itemsPerPageSelect.value;
+    if (value === 'auto') {
+      return null;
+    }
+    return Number.parseInt(value, 10) || null;
   }
 
   let shows = [];
@@ -61,6 +82,7 @@ export async function renderCustomerHomeView (app, navigateTo, state) {
   const paginator = createResponsivePaginator({
     listEl,
     controlsEl,
+    getFixedItemsPerPage,
     getItems: () => shows,
     renderItem: (show) => {
       const hallName = show?.hall?.name ? ` – ${show.hall.name}` : '';
@@ -76,6 +98,10 @@ export async function renderCustomerHomeView (app, navigateTo, state) {
         </div>
       `;
     }
+  });
+
+  itemsPerPageSelect.addEventListener('change', () => {
+    paginator.render();
   });
 
   listEl.addEventListener('click', (event) => {

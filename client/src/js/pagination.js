@@ -17,11 +17,14 @@ export function createResponsivePaginator ({
   renderItem,
   getItems,
   estimateItemHeightPx = 56,
-  bottomReservePx = 0
+  bottomReservePx = 0,
+  fixedItemsPerPage = null,
+  getFixedItemsPerPage = null
 }) {
   let pageIndex = 0;
   let itemHeightPx = estimateItemHeightPx;
 
+  const paginationNavEl = controlsEl.querySelector('.pagination-nav');
   const pageLabelEl = controlsEl.querySelector('[data-pagination="label"]');
   const prevBtn = controlsEl.querySelector('[data-pagination="prev"]');
   const nextBtn = controlsEl.querySelector('[data-pagination="next"]');
@@ -45,6 +48,18 @@ export function createResponsivePaginator ({
   }
 
   function computeItemsPerPage () {
+    // Prüfe dynamische Funktion zuerst
+    if (typeof getFixedItemsPerPage === 'function') {
+      const dynamicFixed = getFixedItemsPerPage();
+      if (dynamicFixed !== null && dynamicFixed > 0) {
+        return dynamicFixed;
+      }
+    }
+    // Dann statischen Wert
+    if (fixedItemsPerPage !== null && fixedItemsPerPage > 0) {
+      return fixedItemsPerPage;
+    }
+    // Sonst responsive Berechnung
     const rect = listEl.getBoundingClientRect();
     const footer = document.querySelector('footer');
     const footerHeight = footer ? Math.round(footer.getBoundingClientRect().height) : 0;
@@ -81,6 +96,11 @@ export function createResponsivePaginator ({
     pageLabelEl.textContent = `Seite ${pageIndex + 1} / ${totalPages}`;
     prevBtn.disabled = pageIndex <= 0;
     nextBtn.disabled = pageIndex >= totalPages - 1;
+
+    // Navigation ausblenden wenn alles auf eine Seite passt
+    if (paginationNavEl) {
+      paginationNavEl.style.display = totalPages <= 1 ? 'none' : '';
+    }
   }
 
   function goPrev () {

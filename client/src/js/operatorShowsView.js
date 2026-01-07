@@ -56,10 +56,22 @@ export async function renderOperatorShowsView (app, navigateTo, state) {
 
       <div id="shows-message" class="message"></div>
       <div id="shows-list" class="resource-list" aria-label="Vorstellungen"></div>
-      <div class="pagination" id="shows-pagination">
-        <button type="button" data-pagination="prev">Zurück</button>
-        <span data-pagination="label"></span>
-        <button type="button" data-pagination="next">Weiter</button>
+      <div class="pagination-controls" id="shows-pagination">
+        <div class="pagination-nav">
+          <button type="button" data-pagination="prev">Zurück</button>
+          <span data-pagination="label"></span>
+          <button type="button" data-pagination="next">Weiter</button>
+        </div>
+        <div class="pagination-options">
+          <label for="items-per-page-shows">Anzeigen:</label>
+          <select id="items-per-page-shows" class="items-select">
+            <option value="auto">Auto</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
       </div>
     </section>
   `;
@@ -76,9 +88,18 @@ export async function renderOperatorShowsView (app, navigateTo, state) {
   const messageEl = document.getElementById('shows-message');
   const listEl = document.getElementById('shows-list');
   const controlsEl = document.getElementById('shows-pagination');
+  const itemsPerPageSelect = document.getElementById('items-per-page-shows');
 
-  if (!formEl || !titleInput || !startsAtInput || !hallSelect || !messageEl || !listEl || !controlsEl) {
+  if (!formEl || !titleInput || !startsAtInput || !hallSelect || !messageEl || !listEl || !controlsEl || !itemsPerPageSelect) {
     return null;
+  }
+
+  function getFixedItemsPerPage () {
+    const value = itemsPerPageSelect.value;
+    if (value === 'auto') {
+      return null;
+    }
+    return Number.parseInt(value, 10) || null;
   }
 
   let halls = [];
@@ -87,6 +108,7 @@ export async function renderOperatorShowsView (app, navigateTo, state) {
   const paginator = createResponsivePaginator({
     listEl,
     controlsEl,
+    getFixedItemsPerPage,
     getItems: () => shows,
     renderItem: (show) => {
       const hallName = show?.hall?.name ? ` – ${show.hall.name}` : '';
@@ -99,6 +121,10 @@ export async function renderOperatorShowsView (app, navigateTo, state) {
         </div>
       `;
     }
+  });
+
+  itemsPerPageSelect.addEventListener('change', () => {
+    paginator.render();
   });
 
   try {

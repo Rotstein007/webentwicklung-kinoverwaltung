@@ -1802,10 +1802,13 @@
     renderItem,
     getItems,
     estimateItemHeightPx = 56,
-    bottomReservePx = 0
+    bottomReservePx = 0,
+    fixedItemsPerPage = null,
+    getFixedItemsPerPage = null
   }) {
     let pageIndex = 0;
     let itemHeightPx = estimateItemHeightPx;
+    const paginationNavEl = controlsEl.querySelector(".pagination-nav");
     const pageLabelEl = controlsEl.querySelector('[data-pagination="label"]');
     const prevBtn = controlsEl.querySelector('[data-pagination="prev"]');
     const nextBtn = controlsEl.querySelector('[data-pagination="next"]');
@@ -1825,6 +1828,15 @@
       }
     }
     function computeItemsPerPage() {
+      if (typeof getFixedItemsPerPage === "function") {
+        const dynamicFixed = getFixedItemsPerPage();
+        if (dynamicFixed !== null && dynamicFixed > 0) {
+          return dynamicFixed;
+        }
+      }
+      if (fixedItemsPerPage !== null && fixedItemsPerPage > 0) {
+        return fixedItemsPerPage;
+      }
       const rect = listEl.getBoundingClientRect();
       const footer = document.querySelector("footer");
       const footerHeight = footer ? Math.round(footer.getBoundingClientRect().height) : 0;
@@ -1856,6 +1868,9 @@
       pageLabelEl.textContent = `Seite ${pageIndex + 1} / ${totalPages}`;
       prevBtn.disabled = pageIndex <= 0;
       nextBtn.disabled = pageIndex >= totalPages - 1;
+      if (paginationNavEl) {
+        paginationNavEl.style.display = totalPages <= 1 ? "none" : "";
+      }
     }
     function goPrev() {
       pageIndex = Math.max(0, pageIndex - 1);
@@ -1913,16 +1928,29 @@
 
       <div id="shows-list" class="resource-list" aria-label="Vorstellungen"></div>
 
-      <div class="pagination" id="shows-pagination">
-        <button type="button" data-pagination="prev">Zur\xFCck</button>
-        <span data-pagination="label"></span>
-        <button type="button" data-pagination="next">Weiter</button>
+      <div class="pagination-controls" id="shows-pagination">
+        <div class="pagination-nav">
+          <button type="button" data-pagination="prev">Zur\xFCck</button>
+          <span data-pagination="label"></span>
+          <button type="button" data-pagination="next">Weiter</button>
+        </div>
+        <div class="pagination-options">
+          <label for="items-per-page-customer">Anzeigen:</label>
+          <select id="items-per-page-customer" class="items-select">
+            <option value="auto">Auto</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
       </div>
     </section>
   `;
     const listEl = document.getElementById("shows-list");
     const messageEl = document.getElementById("shows-message");
     const controlsEl = document.getElementById("shows-pagination");
+    const itemsPerPageSelect = document.getElementById("items-per-page-customer");
     const switchRoleBtn = document.getElementById("switch-role");
     if (switchRoleBtn) {
       switchRoleBtn.addEventListener("click", () => {
@@ -1930,13 +1958,21 @@
         navigateTo2("home");
       });
     }
-    if (!listEl || !controlsEl || !messageEl) {
+    if (!listEl || !controlsEl || !messageEl || !itemsPerPageSelect) {
       return null;
+    }
+    function getFixedItemsPerPage() {
+      const value = itemsPerPageSelect.value;
+      if (value === "auto") {
+        return null;
+      }
+      return Number.parseInt(value, 10) || null;
     }
     let shows = [];
     const paginator = createResponsivePaginator({
       listEl,
       controlsEl,
+      getFixedItemsPerPage,
       getItems: () => shows,
       renderItem: (show) => {
         const hallName = show?.hall?.name ? ` \u2013 ${show.hall.name}` : "";
@@ -1952,6 +1988,9 @@
         </div>
       `;
       }
+    });
+    itemsPerPageSelect.addEventListener("change", () => {
+      paginator.render();
     });
     listEl.addEventListener("click", (event) => {
       const button = event.target.closest('button[data-action="reserve"]');
@@ -2248,26 +2287,46 @@
 
       <form id="hall-form" class="hall-form" autocomplete="off">
         <div class="hall-form-row">
-          <label for="hall-name">Name</label>
-          <input id="hall-name" name="name" type="text" placeholder="z.B. Saal 1" />
+          <label>Neuer Saal</label>
+          <div class="hall-preview" id="hall-preview">Saal 1</div>
         </div>
         <div class="hall-form-row">
           <label for="hall-rows">Reihen</label>
-          <input id="hall-rows" name="rows" type="number" min="1" value="10" />
+          <div class="number-input-wrapper">
+            <button type="button" class="number-btn number-btn--minus" data-target="hall-rows">\u2212</button>
+            <input id="hall-rows" name="rows" type="number" min="1" value="10" />
+            <button type="button" class="number-btn number-btn--plus" data-target="hall-rows">+</button>
+          </div>
         </div>
         <div class="hall-form-row">
           <label for="hall-seats">Sitze pro Reihe</label>
-          <input id="hall-seats" name="seatsPerRow" type="number" min="1" value="20" />
+          <div class="number-input-wrapper">
+            <button type="button" class="number-btn number-btn--minus" data-target="hall-seats">\u2212</button>
+            <input id="hall-seats" name="seatsPerRow" type="number" min="1" value="20" />
+            <button type="button" class="number-btn number-btn--plus" data-target="hall-seats">+</button>
+          </div>
         </div>
         <button type="submit" class="hall-form-submit" id="add-hall">Kinosaal anlegen</button>
       </form>
 
       <div id="halls-message" class="message"></div>
       <div id="halls-grid" class="hall-grid" aria-label="Kinos\xE4le"></div>
-      <div class="pagination" id="halls-pagination">
-        <button type="button" data-pagination="prev">Zur\xFCck</button>
-        <span data-pagination="label"></span>
-        <button type="button" data-pagination="next">Weiter</button>
+      <div class="pagination-controls" id="halls-pagination">
+        <div class="pagination-nav">
+          <button type="button" data-pagination="prev">Zur\xFCck</button>
+          <span data-pagination="label"></span>
+          <button type="button" data-pagination="next">Weiter</button>
+        </div>
+        <div class="pagination-options">
+          <label for="items-per-page">Anzeigen:</label>
+          <select id="items-per-page" class="items-select">
+            <option value="auto">Auto</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
       </div>
     </section>
   `;
@@ -2277,34 +2336,71 @@
     }
     const formEl = document.getElementById("hall-form");
     const messageEl = document.getElementById("halls-message");
-    const nameInput = document.getElementById("hall-name");
+    const previewEl = document.getElementById("hall-preview");
     const rowsInput = document.getElementById("hall-rows");
     const seatsInput = document.getElementById("hall-seats");
     const gridEl = document.getElementById("halls-grid");
     const controlsEl = document.getElementById("halls-pagination");
-    if (!formEl || !messageEl || !nameInput || !rowsInput || !seatsInput || !gridEl || !controlsEl) {
+    const itemsPerPageSelect = document.getElementById("items-per-page");
+    if (!formEl || !messageEl || !previewEl || !rowsInput || !seatsInput || !gridEl || !controlsEl || !itemsPerPageSelect) {
       return null;
     }
+    function getNextHallName() {
+      return `Saal ${halls.length + 1}`;
+    }
+    function updatePreview() {
+      previewEl.textContent = getNextHallName();
+    }
+    function getFixedItemsPerPage() {
+      const value = itemsPerPageSelect.value;
+      if (value === "auto") {
+        return null;
+      }
+      return Number.parseInt(value, 10) || null;
+    }
     let halls = [];
+    let newlyCreatedId = null;
     const paginator = createResponsivePaginator({
       listEl: gridEl,
       controlsEl,
-      estimateItemHeightPx: 130,
-      bottomReservePx: 220,
+      estimateItemHeightPx: 90,
+      bottomReservePx: 60,
+      getFixedItemsPerPage,
       getItems: () => halls,
-      renderItem: (hall) => `
-      <button type="button"
-        class="hall-card"
-        data-hall-id="${hall._id}"
-        data-name="${hall.name}"
-        data-rows="${hall.rows}"
-        data-seats-per-row="${hall.seatsPerRow}">
-        <div class="hall-card-header">
-          <span class="hall-name">${hall.name}</span>
-        </div>
-        <div class="hall-meta">${hall.rows} Reihen \xB7 ${hall.seatsPerRow} Sitze/ Reihe</div>
-      </button>
-    `
+      renderItem: (hall) => {
+        const isNew = hall._id === newlyCreatedId;
+        return `
+        <button type="button"
+          class="hall-card${isNew ? " hall-card--new" : ""}"
+          data-hall-id="${hall._id}"
+          data-name="${hall.name}"
+          data-rows="${hall.rows}"
+          data-seats-per-row="${hall.seatsPerRow}">
+          <div class="hall-card-header">
+            <span class="hall-name">${hall.name}</span>
+            ${isNew ? '<span class="hall-new-badge">Neu</span>' : ""}
+          </div>
+          <div class="hall-meta">${hall.rows} Reihen \xB7 ${hall.seatsPerRow} Sitze/ Reihe</div>
+        </button>
+      `;
+      }
+    });
+    itemsPerPageSelect.addEventListener("change", () => {
+      paginator.render();
+    });
+    formEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".number-btn");
+      if (!btn) return;
+      const targetId = btn.dataset.target;
+      const input = document.getElementById(targetId);
+      if (!input) return;
+      const min = Number.parseInt(input.min, 10) || 1;
+      const current = Number.parseInt(input.value, 10) || min;
+      if (btn.classList.contains("number-btn--plus")) {
+        input.value = current + 1;
+      } else if (btn.classList.contains("number-btn--minus")) {
+        input.value = Math.max(min, current - 1);
+      }
     });
     gridEl.addEventListener("click", (event) => {
       const card = event.target.closest("button[data-hall-id]");
@@ -2321,27 +2417,34 @@
     formEl.addEventListener("submit", async (event) => {
       event.preventDefault();
       try {
-        const name = nameInput.value.trim();
+        const name = getNextHallName();
         const rows = Number.parseInt(rowsInput.value, 10);
         const seatsPerRow = Number.parseInt(seatsInput.value, 10);
-        if (!name) {
-          messageEl.textContent = "Bitte einen Namen angeben.";
-          return;
-        }
         if (!Number.isFinite(rows) || rows <= 0 || !Number.isFinite(seatsPerRow) || seatsPerRow <= 0) {
           messageEl.textContent = "Bitte g\xFCltige Werte f\xFCr Reihen und Sitze pro Reihe angeben.";
           return;
         }
         messageEl.textContent = "Lege neuen Saal an...";
-        await apiPost("/halls", {
+        messageEl.classList.remove("message--success");
+        const created = await apiPost("/halls", {
           name,
           rows,
           seatsPerRow
         });
+        newlyCreatedId = created._id;
         halls = await apiGet("/halls");
-        paginator.render();
-        messageEl.textContent = "";
-        nameInput.value = "";
+        const perPage = Math.max(1, Math.floor((window.innerHeight - 500) / 90));
+        const lastPage = Math.max(0, Math.ceil(halls.length / perPage) - 1);
+        paginator.setPageIndex(lastPage);
+        updatePreview();
+        messageEl.textContent = `Kinosaal "${name}" wurde erfolgreich angelegt.`;
+        messageEl.classList.add("message--success");
+        setTimeout(() => {
+          newlyCreatedId = null;
+          messageEl.textContent = "";
+          messageEl.classList.remove("message--success");
+          paginator.render();
+        }, 3e3);
       } catch (err) {
         console.error(err);
         if (err.status === 409) {
@@ -2356,6 +2459,7 @@
       halls = await apiGet("/halls");
       messageEl.textContent = halls.length === 0 ? "Noch keine Kinos\xE4le vorhanden." : "";
       paginator.render();
+      updatePreview();
     } catch (err) {
       console.error(err);
       messageEl.textContent = "Fehler beim Laden der Kinos\xE4le.";
@@ -2417,10 +2521,22 @@
 
       <div id="shows-message" class="message"></div>
       <div id="shows-list" class="resource-list" aria-label="Vorstellungen"></div>
-      <div class="pagination" id="shows-pagination">
-        <button type="button" data-pagination="prev">Zur\xFCck</button>
-        <span data-pagination="label"></span>
-        <button type="button" data-pagination="next">Weiter</button>
+      <div class="pagination-controls" id="shows-pagination">
+        <div class="pagination-nav">
+          <button type="button" data-pagination="prev">Zur\xFCck</button>
+          <span data-pagination="label"></span>
+          <button type="button" data-pagination="next">Weiter</button>
+        </div>
+        <div class="pagination-options">
+          <label for="items-per-page-shows">Anzeigen:</label>
+          <select id="items-per-page-shows" class="items-select">
+            <option value="auto">Auto</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="12">12</option>
+            <option value="16">16</option>
+          </select>
+        </div>
       </div>
     </section>
   `;
@@ -2435,14 +2551,23 @@
     const messageEl = document.getElementById("shows-message");
     const listEl = document.getElementById("shows-list");
     const controlsEl = document.getElementById("shows-pagination");
-    if (!formEl || !titleInput || !startsAtInput || !hallSelect || !messageEl || !listEl || !controlsEl) {
+    const itemsPerPageSelect = document.getElementById("items-per-page-shows");
+    if (!formEl || !titleInput || !startsAtInput || !hallSelect || !messageEl || !listEl || !controlsEl || !itemsPerPageSelect) {
       return null;
+    }
+    function getFixedItemsPerPage() {
+      const value = itemsPerPageSelect.value;
+      if (value === "auto") {
+        return null;
+      }
+      return Number.parseInt(value, 10) || null;
     }
     let halls = [];
     let shows = [];
     const paginator = createResponsivePaginator({
       listEl,
       controlsEl,
+      getFixedItemsPerPage,
       getItems: () => shows,
       renderItem: (show) => {
         const hallName = show?.hall?.name ? ` \u2013 ${show.hall.name}` : "";
@@ -2455,6 +2580,9 @@
         </div>
       `;
       }
+    });
+    itemsPerPageSelect.addEventListener("change", () => {
+      paginator.render();
     });
     try {
       messageEl.textContent = "Lade Kinos\xE4le...";
@@ -2642,8 +2770,24 @@
     }
     document.title = title;
   }
+  function initThemeToggle() {
+    const toggle = document.getElementById("theme-toggle");
+    if (!toggle) return;
+    const savedTheme = window.localStorage.getItem("theme");
+    if (savedTheme === "light") {
+      document.body.classList.add("light-mode");
+      document.documentElement.classList.add("light-mode");
+    }
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("light-mode");
+      document.documentElement.classList.toggle("light-mode");
+      const isLight = document.body.classList.contains("light-mode");
+      window.localStorage.setItem("theme", isLight ? "light" : "dark");
+    });
+  }
   document.addEventListener("DOMContentLoaded", () => {
     console.log("Client-App gestartet");
+    initThemeToggle();
     const homeLink = document.getElementById("home-link");
     if (homeLink) {
       homeLink.addEventListener("click", () => {

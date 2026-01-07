@@ -150,8 +150,30 @@ function updateTitle (state) {
   document.title = title;
 }
 
+function initThemeToggle () {
+  const toggle = document.getElementById('theme-toggle');
+  if (!toggle) return;
+
+  // Gespeichertes Theme laden
+  const savedTheme = window.localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    document.documentElement.classList.add('light-mode');
+  }
+
+  toggle.addEventListener('click', () => {
+    document.body.classList.toggle('light-mode');
+    document.documentElement.classList.toggle('light-mode');
+    const isLight = document.body.classList.contains('light-mode');
+    window.localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Client-App gestartet');
+
+  initThemeToggle();
+
   const homeLink = document.getElementById('home-link');
   if (homeLink) {
     homeLink.addEventListener('click', () => {
