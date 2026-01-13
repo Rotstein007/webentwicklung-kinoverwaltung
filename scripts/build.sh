@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build-Skript für Kinoverwaltung
+# Build-Skript
 
 set -e  # bei Fehler abbrechen
 

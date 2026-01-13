@@ -2,7 +2,7 @@
 
 import { MongoClient } from 'mongodb';
 
-// Standardkonfiguration (kann über Umgebungsvariablen überschrieben werden)
+// Standardkonfiguration
 const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017';
 const DB_NAME = process.env.DB_NAME || 'kinoverwaltung';
 
